@@ -1,0 +1,22 @@
+{
+    "plugins": ["@trivago/prettier-plugin-sort-imports"],
+    "endOfLine": "crlf",
+    "semi": true,
+    "singleAttributePerLine": true,
+    "tabWidth": 4,
+    "importOrder": [
+        "\\.(css|scss)$",
+        "^(react\\/(.*)$)|^(react$)",
+        "<THIRD_PARTY_MODULES>",
+        "^@\\/(schemas)|\\.\\/(schemas)(.*)$",
+        "^@\\/(components)|\\.\\/(components|icons|ui)(.*)$",
+        "^@\\/(constants)|\\.\\/(constants)(.*)$",
+        "^@\\/(hooks)|\\.\\/(hooks)(.*)$",
+        "^@\\/(types)|\\.\\/(types)(.*)$",
+        "^@\\/(utils)|\\.\\/(utils)(.*)$",
+        "^[./]"
+    ],
+    "importOrderSeparation": true,
+    "importOrderSortSpecifiers": true,
+    "importOrderCaseInsensitive": true
+}
