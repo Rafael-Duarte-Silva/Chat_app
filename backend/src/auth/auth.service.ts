@@ -37,7 +37,6 @@ export class AuthService {
 
     response.cookie('jwt', token, {
       httpOnly: true,
-      signed: true,
       secure: this.isSecure,
       sameSite: 'lax',
       maxAge: this.expiresIn * 1000,
