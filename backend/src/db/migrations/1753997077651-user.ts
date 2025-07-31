@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class User1753919783003 implements MigrationInterface {
-  name = 'User1753919783003';
+export class User1753997077651 implements MigrationInterface {
+  name = 'User1753997077651';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`ALTER TABLE "users" DROP COLUMN "password"`);

@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UsersService } from 'src/users/users.service';
+import { UserService } from 'src/users/user.service';
 import { compareSync } from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
@@ -12,7 +12,7 @@ export class AuthService {
   private readonly expiresIn: number;
   private readonly isSecure: boolean;
   constructor(
-    private readonly userService: UsersService,
+    private readonly userService: UserService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
   ) {

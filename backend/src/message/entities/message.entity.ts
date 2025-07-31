@@ -13,7 +13,7 @@ export class Message {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'text', nullable: false, unique: true })
+  @Column({ type: 'text', nullable: false })
   text: string;
 
   @CreateDateColumn({ name: 'date_created' })
