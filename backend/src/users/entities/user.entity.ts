@@ -17,7 +17,7 @@ export class User {
   @Column({ type: 'varchar', length: 50, nullable: false, unique: true })
   username: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: false })
+  @Column({ type: 'varchar', length: 150, nullable: false })
   password: string;
 
   @ManyToMany(() => Chat, (chat) => chat.users, { onDelete: 'CASCADE' })
