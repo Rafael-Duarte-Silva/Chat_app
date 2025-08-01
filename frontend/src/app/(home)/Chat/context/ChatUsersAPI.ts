@@ -9,3 +9,4 @@ export const getUserData = (
     const response = api.get<UserData[]>(endpoint, { signal });
     return response;
 };
+

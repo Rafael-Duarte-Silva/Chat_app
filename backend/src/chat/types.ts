@@ -8,5 +8,6 @@ export type PrivateMessagePayload = {
 export interface CustomSocket extends Socket {
   data: {
     id: string;
+    username: string;
   };
 }

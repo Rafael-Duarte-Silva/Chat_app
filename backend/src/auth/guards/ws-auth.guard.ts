@@ -32,14 +32,12 @@ export class WsAuthGuard implements CanActivate {
     }
 
     try {
-      const payload: { sub: string } = await this.jwtService.verifyAsync(
-        token,
-        {
+      const payload: { sub: string; username: string } =
+        await this.jwtService.verifyAsync(token, {
           secret: this.jwtSecret,
-        },
-      );
+        });
 
-      return payload.sub;
+      return { id: payload.sub, username: payload.username };
     } catch {
       return null;
     }

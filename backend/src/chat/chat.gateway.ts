@@ -40,12 +40,12 @@ export class ChatGateway
 
       wsAuth
         .verify(client)
-        .then((userId) => {
-          if (!userId) {
+        .then((payload) => {
+          if (!payload) {
             return next(new Error('not authorized'));
           }
 
-          client.data = { id: userId };
+          client.data = payload;
           next();
         })
         .catch(() => next(new Error('not authorized')));
@@ -69,7 +69,18 @@ export class ChatGateway
     console.log(client.data);
     const { to, message } = payload;
 
-    this.server.to(to).emit('message', { from: client.data.id, message });
+    this.server.to(to).emit('message', {
+      from: client.data.id,
+      to,
+      username: client.data.username,
+      message,
+    });
+    this.server.to(client.id).emit('message', {
+      from: client.data.id,
+      to: client.data.id,
+      username: client.data.username,
+      message,
+    });
 
     await this.messageService.setMessage(message);
   }

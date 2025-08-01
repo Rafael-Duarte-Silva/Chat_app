@@ -1,82 +1,75 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-
-import { useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
-import { io } from "socket.io-client";
-
-import { getUserData } from "./HomeAPI";
-
-const socket = io("ws://localhost:3331/chat", { withCredentials: true });
+import { ChatContent, ChatMessageBar, ChatSideBar, ChatTopBar } from "./Chat";
+import { ChatProvider } from "./Chat/context/ChatProvider";
 
 export default function Home() {
-    const { ref, handleConnect, handleDisconnect, handleMessage } = useChat();
+    /*const { pathPush } = useUserFilter();
+    const searchParams = new URLSearchParams(useSearchParams().toString());
+    const page = searchParams.get("page") || "1";
+    const handlePage = (page: string) => {
+        pathPush([["page", page]]);
+    };
+
+    const search = useRef<string>("");
+    const deferredSearch: string = searchParams.get("search") || "";
+
+    const handleSearchKeyboard = (e: React.KeyboardEvent) => {
+        if (e.key === "Enter") {
+            handleSearch();
+        }
+    };
+
+    const updateSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+        search.current = event.target.value;
+    };
+
+    const handleSearch = (event?: React.MouseEvent) => {
+        if (event) {
+            event.stopPropagation();
+        }
+
+        pathPush([
+            ["search", search.current],
+            ["page", "1"],
+        ]);
+    };*/
 
     return (
-        <div>
-            <label htmlFor="message">message</label>
-            <input
-                id="message"
-                type="text"
-                ref={ref}
-            />
-            <button onClick={handleMessage}>send message</button>
-            <button onClick={handleConnect}>connect</button>
-            <button onClick={handleDisconnect}>disconnect</button>
-        </div>
+        <main className="flex min-h-dvh w-screen">
+            <ChatProvider>
+                <ChatSideBar />
+                <div className="flex flex-auto flex-col bg-neutral-800">
+                    <ChatTopBar />
+                    <ChatContent />
+                    <ChatMessageBar />
+                </div>
+            </ChatProvider>
+        </main>
     );
 }
 
-const useUserData = (search: string = "", page: string = "") => {
-    const endpoint = `/users?search=${search}&page=${page}`;
-
-    const query = useQuery({
-        queryFn: ({ signal }) => getUserData(endpoint, signal),
-        queryKey: ["users"],
-        retry: 2,
-    });
-
-    return {
-        ...query,
-        data: query.data?.data,
-    };
-};
-
-const useChat = () => {
-    const { data, isSuccess } = useUserData("", "1");
-    const ref = useRef<HTMLInputElement | null>(null);
+/*const useUserFilter = () => {
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
     const router = useRouter();
 
-    useEffect(() => {
-        socket.on(
-            "message",
-            ({ from, message }: { from: string; message: string }) => {
-                console.log(from, message);
-            },
-        );
-        socket.on("connect_error", (err) => {
-            console.log(err.message);
-            router.push("/login");
-        });
-    }, []);
+    const setFilters = useCallback(
+        (queryList: string[][]) => {
+            const params = new URLSearchParams(searchParams.toString());
 
-    const handleMessage = isSuccess
-        ? () => {
-              socket.emit("message", {
-                  to: isSuccess && data ? data[0].id : "",
-                  message: ref.current?.value,
-              });
-          }
-        : () => {};
+            queryList.forEach(([name, value]) => {
+                return value ? params.set(name, value) : params.delete(name);
+            });
 
-    const handleConnect = () => {
-        socket.connect();
+            return params.toString();
+        },
+        [searchParams],
+    );
+
+    const pathPush = (queryList: string[][]): void => {
+        router.push(`${pathname}?${setFilters(queryList)}`);
     };
 
-    const handleDisconnect = () => {
-        socket.disconnect();
-    };
-
-    return { ref, handleConnect, handleDisconnect, handleMessage };
-};
+    return { pathPush };
+};*/
