@@ -1,5 +1,5 @@
 import { ChatMessage } from "./ChatMessage";
-import { useChatContext } from "./context/useChatContext";
+import { useChatContext } from "./context/chat/useChatContext";
 
 export const ChatContent = () => {
     const { messages } = useChatContext();

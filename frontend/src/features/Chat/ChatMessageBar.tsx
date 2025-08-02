@@ -1,4 +1,4 @@
-import { useChatContext } from "./context/useChatContext";
+import { useChatContext } from "./context/chat/useChatContext";
 
 export const ChatMessageBar = () => {
     const { ref, handleMessage } = useChatContext();

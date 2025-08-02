@@ -1,8 +1,10 @@
 import { ChatProfile } from "./ChatProfile";
-import { useChatContext } from "./context/useChatContext";
+import { useChatContext } from "./context/chat/useChatContext";
+import { useProfileContext } from "./context/profile/useProfileContext";
 
 export const ChatSideBar = () => {
-    const { users, handleChat } = useChatContext();
+    const { users } = useProfileContext();
+    const { handleChat } = useChatContext();
 
     return (
         <aside className="flex-[0_0_20%] border-r-2 border-r-neutral-700 bg-neutral-900 p-6 text-stone-50">

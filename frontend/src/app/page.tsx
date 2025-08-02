@@ -1,10 +1,24 @@
 "use client";
 
-import { ChatContent, ChatMessageBar, ChatSideBar, ChatTopBar } from "./Chat";
-import { ChatProvider } from "./Chat/context/ChatProvider";
+import { ChatSideBar } from "@/features/Chat";
+import { ChatRight } from "@/features/Chat/ChatRight";
+import { ChatProvider } from "@/features/Chat/context/chat/ChatProvider";
+import { ProfileProvider } from "@/features/Chat/context/profile/ProfileProvider";
 
 export default function Home() {
-    /*const { pathPush } = useUserFilter();
+    return (
+        <main className="flex min-h-dvh w-screen">
+            <ChatProvider>
+                <ProfileProvider>
+                    <ChatSideBar />
+                    <ChatRight />
+                </ProfileProvider>
+            </ChatProvider>
+        </main>
+    );
+}
+
+/*const { pathPush } = useUserFilter();
     const searchParams = new URLSearchParams(useSearchParams().toString());
     const page = searchParams.get("page") || "1";
     const handlePage = (page: string) => {
@@ -34,20 +48,6 @@ export default function Home() {
             ["page", "1"],
         ]);
     };*/
-
-    return (
-        <main className="flex min-h-dvh w-screen">
-            <ChatProvider>
-                <ChatSideBar />
-                <div className="flex flex-auto flex-col bg-neutral-800">
-                    <ChatTopBar />
-                    <ChatContent />
-                    <ChatMessageBar />
-                </div>
-            </ChatProvider>
-        </main>
-    );
-}
 
 /*const useUserFilter = () => {
     const pathname = usePathname();

@@ -12,6 +12,7 @@
         "^(react\\/(.*)$)|^(react$)",
         "<THIRD_PARTY_MODULES>",
         "^@\\/(schemas)|\\.\\/(schemas)(.*)$",
+        "^@\\/(features)|\\.\\/(features)(.*)$",
         "^@\\/(components)|\\.\\/(components|icons|ui)(.*)$",
         "^@\\/(constants)|\\.\\/(constants)(.*)$",
         "^@\\/(hooks)|\\.\\/(hooks)(.*)$",
