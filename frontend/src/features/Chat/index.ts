@@ -1,6 +1,6 @@
 export * from "./ChatProfile";
-export * from "./ChatSideBar";
-export * from "./ChatTopBar";
+export * from "./ChatBar";
+export * from "./ChatProfileBar";
 export * from "./ChatMessageBar";
 export * from "./ChatContent";
 

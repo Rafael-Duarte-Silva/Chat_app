@@ -1,7 +1,26 @@
-import { useChatContext } from "./context/chat/useChatContext";
+import { memo, useRef } from "react";
 
-export const ChatMessageBar = () => {
-    const { ref, handleMessage } = useChatContext();
+import { ws } from "@/services/ws";
+
+type ChatMessageBarProps = {
+    id: string;
+};
+
+export const ChatMessageBar = memo(function ChatMessageBar({
+    id,
+}: ChatMessageBarProps) {
+    const ref = useRef<HTMLInputElement | null>(null);
+
+    const handleMessage = () => {
+        if (!ref.current) return;
+
+        ws.emit("message", {
+            to: id,
+            message: ref.current?.value,
+        });
+
+        ref.current.value = "";
+    };
 
     return (
         <div className="flex h-28 items-center justify-between gap-x-12 border-t-2 border-t-neutral-700 bg-neutral-900 pr-8 pl-16 text-stone-50">
@@ -9,7 +28,7 @@ export const ChatMessageBar = () => {
                 <input
                     type="text"
                     placeholder="type message"
-                    className="block size-full"
+                    className="block size-full capitalize"
                     ref={ref}
                 />
             </label>
@@ -22,5 +41,5 @@ export const ChatMessageBar = () => {
             </button>
         </div>
     );
-};
+});
 

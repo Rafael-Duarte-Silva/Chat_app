@@ -1,8 +1,8 @@
 import { ChatMessage } from "./ChatMessage";
-import { useChatContext } from "./context/chat/useChatContext";
+import { useMessageContext } from "./context/message/useMessageContext";
 
 export const ChatContent = () => {
-    const { messages } = useChatContext();
+    const { messages } = useMessageContext();
 
     return (
         <div className="flex flex-auto flex-col gap-y-8 px-16 py-8">
