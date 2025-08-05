@@ -8,11 +8,7 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
     const [currentChat, setCurrentChat] = useState<CurrentChat>();
 
     const handleChat = (currentChatProp: CurrentChat) => {
-        if (
-            currentChatProp &&
-            currentChat &&
-            currentChatProp.id === currentChat.id
-        ) {
+        if (currentChatProp?.id === currentChat?.id) {
             return;
         }
 
