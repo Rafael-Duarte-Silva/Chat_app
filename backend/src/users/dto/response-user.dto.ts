@@ -2,10 +2,10 @@ import { User } from 'src/users/entities/user.entity';
 
 export class ResponseUserDto {
   id: string;
-  username: string;
+  name: string;
 
   constructor(user: User) {
     this.id = user.id;
-    this.username = user.username;
+    this.name = user.username;
   }
 }

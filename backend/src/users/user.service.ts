@@ -4,9 +4,8 @@ import { Raw, Repository } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { hashSync } from 'bcrypt';
-import { FindUserDto } from './dto/find-user.dto';
 import { ResponseUserDto } from './dto/response-user.dto';
-import { CustomRequest } from '../common/types';
+import { FindUserDto } from './dto/find-user.dto';
 
 @Injectable()
 export class UserService {
@@ -19,7 +18,6 @@ export class UserService {
     const userAlreadyRegistered = await this.findByUsername(
       createUserDto.username,
     );
-
     if (userAlreadyRegistered) {
       throw new ConflictException(
         `User '${createUserDto.username}' already registered`,
@@ -31,15 +29,14 @@ export class UserService {
       password: hashSync(createUserDto.password, 10),
     };
 
-    await this.userRepository.save(dbUser);
-    return { status: 'created' };
+    return this.userRepository.save(dbUser);
   }
 
   findByUsername(username: string) {
     return this.userRepository.findOneBy({ username });
   }
 
-  async findAll({ page, search }: FindUserDto, request: CustomRequest) {
+  async findAll({ page, search }: FindUserDto, id: string) {
     const take: number = 8;
     const [users] = await this.userRepository.findAndCount({
       order: { username: 'ASC' },
@@ -50,12 +47,18 @@ export class UserService {
       take,
     });
     if (users === null) {
-      return;
+      return [];
     }
 
     return users
       .map((user) => this.response(user))
-      .filter((user) => request.user.sub !== user.id);
+      .filter((user) => id !== user.id);
+  }
+
+  async isReal(userId: string) {
+    const user = await this.userRepository.findBy({ id: userId });
+
+    return !!user;
   }
 
   private response(user: User) {

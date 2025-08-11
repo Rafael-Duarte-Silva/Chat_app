@@ -3,11 +3,13 @@ import { memo, useRef } from "react";
 import { ws } from "@/services/ws";
 
 type ChatMessageBarProps = {
-    id: string;
+    id?: string;
+    chatId?: string;
 };
 
 export const ChatMessageBar = memo(function ChatMessageBar({
     id,
+    chatId,
 }: ChatMessageBarProps) {
     const ref = useRef<HTMLInputElement | null>(null);
 
@@ -16,6 +18,7 @@ export const ChatMessageBar = memo(function ChatMessageBar({
 
         ws.emit("message", {
             to: id,
+            chatId,
             message: ref.current?.value,
         });
 
@@ -23,7 +26,7 @@ export const ChatMessageBar = memo(function ChatMessageBar({
     };
 
     return (
-        <div className="flex h-28 items-center justify-between gap-x-12 border-t-2 border-t-neutral-700 bg-neutral-900 pr-8 pl-16 text-stone-50">
+        <div className="flex h-28 shrink-0 items-center justify-between gap-x-12 border-t-2 border-t-neutral-700 bg-neutral-900 pr-8 pl-16 text-stone-50">
             <label className="h-1/2 w-3/4 rounded-xl border-2 border-neutral-700 p-2.5">
                 <input
                     type="text"

@@ -1,28 +1,22 @@
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
 
-import { useQuery } from "@tanstack/react-query";
+import { UserData } from "@/interfaces/UserData";
+import { ws } from "@/services/ws";
 
-import { getUserData } from "./ChatBarAPI";
 import { ChatProfile } from "./ChatProfile";
 import { useChatContext } from "./context/chat/useChatContext";
 
-export const ChatBar = () => {
+export const ChatUserBar = () => {
     const { handleChat } = useChatContext();
 
-    const endpoint = `/users?page=1`;
-    const query = useQuery({
-        queryFn: ({ signal }) => getUserData(endpoint, signal),
-        queryKey: ["users"],
-        retry: 2,
-    });
+    const [users, setUsers] = useState<UserData[]>([]);
 
-    const { users } = useMemo(
-        () => ({
-            ...query,
-            users: query.data?.data,
-        }),
-        [query.data?.data],
-    );
+    useEffect(() => {
+        ws.emit("getUsers", { page: 1, search: "" });
+        ws.on("getUsers", (data: UserData[]) => {
+            setUsers(data);
+        });
+    }, []);
 
     return (
         <aside className="flex-[0_0_20%] border-r-2 border-r-neutral-700 bg-neutral-900 p-6 text-stone-50">
@@ -36,12 +30,12 @@ export const ChatBar = () => {
             </label>
             <ul className="mt-10 flex flex-col gap-y-6">
                 {users &&
-                    users.map(({ id, username }) => (
+                    users.map(({ id, name }) => (
                         <ChatProfile
                             key={id}
                             element="li"
-                            username={username}
-                            onClick={() => handleChat({ id, username })}
+                            username={name}
+                            onClick={() => handleChat({ id, name })}
                         />
                     ))}
             </ul>

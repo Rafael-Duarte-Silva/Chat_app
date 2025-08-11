@@ -1,7 +1,8 @@
 export type CurrentChat =
     | {
-          id: string;
-          username: string;
+          chatId?: string;
+          id?: string;
+          name?: string;
       }
     | undefined;
 

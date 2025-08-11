@@ -9,9 +9,14 @@ export const ChatContentBar = () => {
 
     return (
         <div className="flex flex-auto flex-col bg-neutral-800">
-            {currentChat && <ChatProfileBar username={currentChat.username} />}
+            {currentChat && <ChatProfileBar username={currentChat.name} />}
             <MessageProvider>{currentChat && <ChatContent />}</MessageProvider>
-            {currentChat && <ChatMessageBar id={currentChat.id} />}
+            {currentChat && (
+                <ChatMessageBar
+                    id={currentChat.id}
+                    chatId={currentChat.chatId}
+                />
+            )}
         </div>
     );
 };

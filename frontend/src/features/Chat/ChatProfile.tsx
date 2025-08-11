@@ -6,7 +6,7 @@ type ChatProfileProps = {
     classNameContainer?: string;
     classNameInfos?: string;
     classNameUsername?: string;
-    username: string;
+    username?: string;
     onClick?(): void;
 };
 
@@ -20,12 +20,12 @@ export const ChatProfile = memo(function ChatProfile({
     onClick,
 }: ChatProfileProps) {
     const fullNameInitials = (username: string | undefined): string => {
-        return username
-            ? username
-                  .split(" ")
-                  .map((word) => word.charAt(0).toLowerCase())
-                  .join("")
-            : "";
+        if (!username) {
+            return "";
+        }
+
+        const fullNameArray: string[] = username.split(" ");
+        return `${fullNameArray[0][0]}${fullNameArray[1][0]}`;
     };
 
     return (
@@ -37,7 +37,7 @@ export const ChatProfile = memo(function ChatProfile({
             <div className="flex size-10 items-center justify-center rounded-[50%] bg-amber-400 text-lg uppercase">
                 {fullNameInitials(username)}
             </div>
-            <div className={`flex flex-auto flex-col ${classNameInfos}`}>
+            <div className={`flex flex-[1_0_auto] flex-col ${classNameInfos}`}>
                 <div className={`capitalize ${classNameUsername}`}>
                     {username}
                 </div>

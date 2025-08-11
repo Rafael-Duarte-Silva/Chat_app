@@ -1,6 +1,7 @@
 import { ReactNode, useMemo, useState } from "react";
 
 import { CurrentChat } from "@/interfaces/CurrentChat";
+import { ws } from "@/services/ws";
 
 import { ChatContext } from "./useChatContext";
 
@@ -12,7 +13,12 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
             return;
         }
 
-        setCurrentChat(currentChatProp);
+        ws.emit("loadChat", { to: currentChatProp?.id });
+        ws.once("loadChat", ({ chatId }: { chatId: string }) => {
+            console.log(chatId);
+            setCurrentChat({ ...currentChatProp, chatId });
+            ws.emit("loadMessage", { chatId });
+        });
     };
 
     const contextValue = useMemo(

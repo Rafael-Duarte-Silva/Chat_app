@@ -43,7 +43,7 @@ export class AuthService {
     });
   }
 
-  register(createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+  async register(createUserDto: CreateUserDto) {
+    await this.userService.create(createUserDto);
   }
 }

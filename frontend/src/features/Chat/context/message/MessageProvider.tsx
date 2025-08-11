@@ -11,7 +11,11 @@ export const MessageProvider = ({ children }: { children: ReactNode }) => {
     const [messages, setMessages] = useState<Messages[]>([]);
 
     useEffect(() => {
-        ws.connect();
+        ws.on("loadMessage", (data: Messages[]) => {
+            console.log(data);
+            setMessages((prevMessages) => [...prevMessages, ...data]);
+        });
+
         ws.on("message", (data: Messages) => {
             console.log(data);
             setMessages((prevMessages) => [...prevMessages, data]);

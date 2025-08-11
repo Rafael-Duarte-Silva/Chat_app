@@ -13,7 +13,14 @@ import {
 import { ExtendedError, Server, Socket } from 'socket.io';
 import { WsAuthGuard } from '../auth/guards/ws-auth.guard';
 import { MessageService } from 'src/message/message.service';
-import { CustomSocket, PrivateMessagePayload } from './types';
+import { CustomSocket } from './types';
+import { MessageDto } from '../message/dto/message.dto';
+import { FindUserDto } from 'src/users/dto/find-user.dto';
+import { ChatService } from './chat.service';
+import { LoadMessageDto } from '../message/dto/load-message.dto';
+import { ResponseUserDto } from 'src/users/dto/response-user.dto';
+import { LoadChatDto } from './dto/load-chat.dto';
+import { UserService } from 'src/users/user.service';
 
 @WebSocketGateway(3331, {
   namespace: 'chat',
@@ -29,9 +36,11 @@ export class ChatGateway
   private readonly server: Server;
 
   constructor(
+    private readonly chatService: ChatService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     private readonly messageService: MessageService,
+    private readonly userService: UserService,
   ) {}
 
   afterInit(socket: Server) {
@@ -53,7 +62,7 @@ export class ChatGateway
   }
 
   async handleConnection(client: CustomSocket) {
-    console.log(`client connected: ${client.data.id}`);
+    console.log(`client connected: ${client.data.id} ${client.data.username}`);
     await client.join(client.data.id);
   }
 
@@ -63,11 +72,13 @@ export class ChatGateway
 
   @SubscribeMessage('message')
   async handleMessage(
-    @MessageBody() payload: PrivateMessagePayload,
+    @MessageBody() payload: MessageDto,
     @ConnectedSocket() client: CustomSocket,
   ): Promise<void> {
-    console.log(client.data);
-    const { to, message } = payload;
+    console.log(client.data, payload);
+    const { to, message, chatId } = payload;
+
+    await this.messageService.setMessage(message, client.data.id, chatId);
 
     this.server.to(to).emit('message', {
       from: client.data.id,
@@ -81,7 +92,45 @@ export class ChatGateway
       username: client.data.username,
       message,
     });
+  }
 
-    await this.messageService.setMessage(message);
+  @SubscribeMessage('loadChat')
+  async handleLoadChat(
+    @MessageBody() payload: LoadChatDto,
+    @ConnectedSocket() client: CustomSocket,
+  ): Promise<void> {
+    const { to } = payload;
+
+    const chatId = await this.chatService.create(client.data.id, to);
+
+    client.emit('loadChat', { chatId });
+  }
+
+  @SubscribeMessage('loadMessage')
+  async handleLoadMessage(
+    @MessageBody() payload: LoadMessageDto,
+    @ConnectedSocket() client: CustomSocket,
+  ): Promise<void> {
+    const { chatId } = payload;
+
+    const messages = await this.messageService.loadMessage(
+      chatId,
+      client.data.id,
+    );
+
+    client.emit('loadMessage', messages);
+  }
+
+  @SubscribeMessage('getUsers')
+  async handleUsers(
+    @MessageBody() payload: FindUserDto,
+    @ConnectedSocket() client: CustomSocket,
+  ): Promise<void> {
+    const chats: ResponseUserDto[] = await this.userService.findAll(
+      payload,
+      client.data.id,
+    );
+
+    client.emit('getUsers', chats);
   }
 }

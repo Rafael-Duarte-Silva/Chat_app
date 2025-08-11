@@ -5,7 +5,7 @@ export const ChatContent = () => {
     const { messages } = useMessageContext();
 
     return (
-        <div className="flex flex-auto flex-col gap-y-8 px-16 py-8">
+        <div className="flex flex-auto flex-col gap-y-8 overflow-y-auto px-16 py-8">
             {messages.map(({ from, to, message, username }, index) => (
                 <ChatMessage
                     key={index}

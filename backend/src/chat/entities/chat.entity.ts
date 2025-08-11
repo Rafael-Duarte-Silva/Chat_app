@@ -13,7 +13,7 @@ export class Chat {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: false })
+  @Column({ type: 'varchar', length: 50, nullable: true })
   name: string;
 
   @ManyToMany(() => User, (user) => user.chats, { onDelete: 'CASCADE' })
