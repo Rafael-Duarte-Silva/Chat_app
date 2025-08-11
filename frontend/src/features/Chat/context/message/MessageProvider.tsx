@@ -13,7 +13,7 @@ export const MessageProvider = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         ws.on("loadMessage", (data: Messages[]) => {
             console.log(data);
-            setMessages((prevMessages) => [...prevMessages, ...data]);
+            setMessages(data);
         });
 
         ws.on("message", (data: Messages) => {
