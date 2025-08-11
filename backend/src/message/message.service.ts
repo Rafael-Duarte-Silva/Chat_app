@@ -25,19 +25,20 @@ export class MessageService {
     return;
   }
 
-  async isBelong(userId: string) {
+  async isBelong(chatId: string, userId: string) {
     const userBelong: boolean = await this.messageRepository
       .createQueryBuilder('message')
       .innerJoinAndSelect('message.chats', 'chat')
       .innerJoinAndSelect('chat.users', 'user')
       .where('user.id = :userId', { userId })
+      .andWhere('chat.id = :chatId', { chatId })
       .getExists();
 
     return userBelong;
   }
 
   async loadMessage(chatId: string, userId: string) {
-    const isBelong = await this.isBelong(userId);
+    const isBelong = await this.isBelong(chatId, userId);
     if (!isBelong) {
       return [];
     }
