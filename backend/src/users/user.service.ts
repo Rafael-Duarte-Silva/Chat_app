@@ -55,10 +55,12 @@ export class UserService {
       .filter((user) => id !== user.id);
   }
 
-  async isReal(userId: string) {
-    const user = await this.userRepository.findBy({ id: userId });
+  async isExists(userId: string) {
+    const userExists: boolean = await this.userRepository.existsBy({
+      id: userId,
+    });
 
-    return !!user;
+    return userExists;
   }
 
   private response(user: User) {

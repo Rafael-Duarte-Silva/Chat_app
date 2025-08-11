@@ -26,14 +26,14 @@ export class MessageService {
   }
 
   async isBelong(userId: string) {
-    const user = await this.messageRepository
+    const userBelong: boolean = await this.messageRepository
       .createQueryBuilder('message')
       .innerJoinAndSelect('message.chats', 'chat')
       .innerJoinAndSelect('chat.users', 'user')
       .where('user.id = :userId', { userId })
-      .getOne();
+      .getExists();
 
-    return !!user;
+    return userBelong;
   }
 
   async loadMessage(chatId: string, userId: string) {
@@ -42,29 +42,49 @@ export class MessageService {
       return [];
     }
 
-    const messages = await this.messageRepository
-      .createQueryBuilder('message')
-      .innerJoinAndSelect('message.users', 'user')
-      .where('message.chatsId = :chatId', { chatId })
-      .orderBy('message.dateCreated', 'ASC')
-      .limit(10)
-      .getMany();
-
-    console.log(messages);
+    const messages: { message: string; from: string; username: string }[] =
+      await this.messageRepository
+        .createQueryBuilder('message')
+        .innerJoinAndSelect('message.users', 'user')
+        .select([
+          'message.text AS message',
+          'user.id AS from',
+          'user.username AS username',
+        ])
+        .where('message.chatsId = :chatId', { chatId })
+        .orderBy('message.dateCreated', 'DESC')
+        .limit(10)
+        .getRawMany();
 
     if (!messages) {
       return [];
     }
 
-    return messages.map((message) => this.response(message, userId));
+    const reverseMessages = messages.map((message) =>
+      this.response(message, userId),
+    );
+
+    let right: number = reverseMessages.length - 1;
+    let left: number = 0;
+    while (left < right) {
+      const swap = reverseMessages[left];
+      reverseMessages[left] = reverseMessages[right];
+      reverseMessages[right] = swap;
+
+      right--;
+      left++;
+    }
+
+    return reverseMessages;
   }
 
-  response(message: Message, userId: string) {
+  response(
+    message: { message: string; from: string; username: string },
+    userId: string,
+  ) {
     return {
-      from: message.users.id,
+      ...message,
       to: userId,
-      message: message.text,
-      username: message.users.username,
     };
   }
 }

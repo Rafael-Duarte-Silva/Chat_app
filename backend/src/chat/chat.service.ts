@@ -14,8 +14,8 @@ export class ChatService {
 
   async create(fromId: string, toId: string) {
     if (
-      !(await this.userService.isReal(fromId)) &&
-      !(await this.userService.isReal(toId))
+      !(await this.userService.isExists(fromId)) &&
+      !(await this.userService.isExists(toId))
     ) {
       return;
     }
