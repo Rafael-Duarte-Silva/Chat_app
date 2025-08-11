@@ -34,10 +34,10 @@ export const ChatProfile = memo(function ChatProfile({
             className={`flex gap-x-4 text-stone-50 ${classNameContainer}`}
             onClick={onClick}
         >
-            <div className="flex size-10 items-center justify-center rounded-[50%] bg-amber-400 text-lg uppercase">
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-[50%] bg-amber-400 text-lg uppercase">
                 {fullNameInitials(username)}
             </div>
-            <div className={`flex flex-[1_0_auto] flex-col ${classNameInfos}`}>
+            <div className={`flex flex-auto flex-col ${classNameInfos}`}>
                 <div className={`capitalize ${classNameUsername}`}>
                     {username}
                 </div>

@@ -19,7 +19,7 @@ export const ChatUserBar = () => {
     }, []);
 
     return (
-        <aside className="flex-[0_0_20%] border-r-2 border-r-neutral-700 bg-neutral-900 p-6 text-stone-50">
+        <aside className="min-w-60 flex-[0_0_20%] border-r-2 border-r-neutral-700 bg-neutral-900 p-6 text-stone-50">
             <h1 className="text-3xl capitalize">chat app</h1>
             <label className="mt-8 block rounded-xl border-2 border-neutral-700 p-2.5">
                 <input
